@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	results := make(map[string]string)
 	urls := []string{
 		"https://www.airbnb.com/",
 		"https://www.google.com/",
@@ -19,19 +20,22 @@ func main() {
 		"https://nomadcoders.co/",
 	}
 	for _, url := range urls {
+		result := "OK"
 		err := hitURL(url)
 		if err != nil {
-			fmt.Println(err)
+			result = "FAILED"
 		}
+		results[url] = result
+	}
+	for url, result := range results {
+		fmt.Println(url, result)
 	}
 }
 
 var errRequestFailed = errors.New("Request Failed")
 
 func hitURL(url string) error {
-	fmt.Println("Checking:", url)
 	resp, err := http.Get(url)
-	fmt.Println(resp.StatusCode)
 	if err != nil || resp.StatusCode >= 400 {
 		return errRequestFailed
 	}
